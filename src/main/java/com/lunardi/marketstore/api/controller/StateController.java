@@ -68,9 +68,7 @@ public class StateController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{stateId}")
 	public void delete(@PathVariable Long stateId) {
-		State state = stateService.getState(stateId);
-		
-		stateService.delete(state.getId());
+		stateService.delete(stateId);
 	}
 	
 	private List<StateDTO> toCollectionlDTO(List<State> states) {

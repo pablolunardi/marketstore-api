@@ -14,14 +14,25 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CityInputDTO {
+public class AddressInputDTO {
 
-	@Size(min = 2, max = 30)
+	@Size(min = 8, max = 12)
 	@NotBlank
-	private String name;
+	private String zipCode;
+	
+	@Size(min = 5, max = 30)
+	@NotBlank
+	private String street1;
+	
+	@Size(max = 10)
+	private String street2;
+	
+	@Size(min = 3, max = 20)
+	@NotBlank
+	private String district;
 	
 	@Valid
 	@NotNull
-	private StateIdInput state;
+	private CityIdInputDTO city;
 	
 }

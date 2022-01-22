@@ -19,7 +19,7 @@ insert into city (name, state_id) values ('Passo Fundo', 1);
 insert into city (name, state_id) values ('Balneário Camboriú', 2);
 
 insert into merchant (name, active, address_zipcode, address_street_1, address_district, address_city_id) values ('Comercial Tio Patinhas', true, '99074-360', 'Av. Aspirante Jenner, 489', 'Vl Sta Maria', 1);
-
+insert into merchant (name, active, address_zipcode, address_street_1, address_district, address_city_id) values ('SM Eletrônicos', true, '99074-360', 'Av. Aspirante Jenner, 489', 'Vl Sta Maria', 1);
 
 insert into product (name, description, price, enabled, merchant_id) values ('Salgadinho Ruffles', 'Salgadinho de batata bem crocante', 12.50, false, 1);
 insert into product (name, description, price, enabled, merchant_id) values ('Refrigerante Coca-cola 2L', 'Refrigerante de cola muito refrescante', 10.50, false, 1);

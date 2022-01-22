@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lunardi.marketstore.api.dto.ProductDTO;
 import com.lunardi.marketstore.api.dto.input.ProductInputDTO;
+import com.lunardi.marketstore.domain.exception.BusinessException;
+import com.lunardi.marketstore.domain.exception.MerchantNotFoundException;
+import com.lunardi.marketstore.domain.model.Merchant;
 import com.lunardi.marketstore.domain.model.Product;
 import com.lunardi.marketstore.domain.service.ProductService;
 
@@ -49,28 +52,35 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public ProductDTO create(@Valid @RequestBody ProductInputDTO productInputDTO) {
-		Product product = productService.save(toModel(productInputDTO));
-		
-		return toDTO(product);
+		try {
+			Product product = productService.save(toModel(productInputDTO));
+			
+			return toDTO(product);
+		} catch (MerchantNotFoundException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
 	}
 	
 	@PutMapping("/{productId}")
 	public ProductDTO update(@PathVariable Long productId, @Valid @RequestBody ProductInputDTO productInputDTO) {
-		Product product = productService.getProduct(productId);
-		
-		modelMapper.map(productInputDTO, product);
-		
-		product = productService.save(product);
-				
-		return toDTO(product);
+		try {
+			Product product = productService.getProduct(productId);
+			product.setMerchant(new Merchant());
+			
+			modelMapper.map(productInputDTO, product);
+			
+			product = productService.save(product);
+					
+			return toDTO(product);
+		} catch (MerchantNotFoundException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{productId}")
 	public void delete(@PathVariable Long productId) {
-		Product product = productService.getProduct(productId);
-		
-		productService.delete(product.getId());
+		productService.delete(productId);
 	}
 	
 	private List<ProductDTO> toCollectionlDTO(List<Product> products) {
