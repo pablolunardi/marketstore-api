@@ -22,14 +22,13 @@ import com.lunardi.marketstore.api.dto.ProductDTO;
 import com.lunardi.marketstore.api.dto.input.ProductInputDTO;
 import com.lunardi.marketstore.domain.exception.BusinessException;
 import com.lunardi.marketstore.domain.exception.MerchantNotFoundException;
-import com.lunardi.marketstore.domain.model.Merchant;
 import com.lunardi.marketstore.domain.model.Product;
 import com.lunardi.marketstore.domain.service.ProductService;
 
 
 @RestController
-@RequestMapping("/products")
-public class ProductController {
+@RequestMapping("/merchants/{merchantId}/products")
+public class MerchantProductController {
 	
 	@Autowired
 	private ProductService productService;
@@ -38,22 +37,22 @@ public class ProductController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
-	public List<ProductDTO> findAll() {
-		List<Product> products = productService.findAll();
+	public List<ProductDTO> findAll(@PathVariable Long merchantId) {
+		List<Product> products = productService.findByMerchant(merchantId);
 		
 		return toCollectionlDTO(products);
 	}
 	
 	@GetMapping("/{productId}")
-	public ProductDTO getProduct(@PathVariable Long productId) {
-		return toDTO(productService.getProduct(productId));
+	public ProductDTO getProduct(@PathVariable Long merchantId, @PathVariable Long productId) {
+		return toDTO(productService.findByMerchantIdAndId(merchantId, productId));
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ProductDTO create(@Valid @RequestBody ProductInputDTO productInputDTO) {
+	public ProductDTO create(@PathVariable Long merchantId, @Valid @RequestBody ProductInputDTO productInputDTO) {
 		try {
-			Product product = productService.save(toModel(productInputDTO));
+			Product product = productService.save(toModel(productInputDTO), merchantId);
 			
 			return toDTO(product);
 		} catch (MerchantNotFoundException e) {
@@ -62,14 +61,13 @@ public class ProductController {
 	}
 	
 	@PutMapping("/{productId}")
-	public ProductDTO update(@PathVariable Long productId, @Valid @RequestBody ProductInputDTO productInputDTO) {
+	public ProductDTO update(@PathVariable Long merchantId, @PathVariable Long productId, @Valid @RequestBody ProductInputDTO productInputDTO) {
 		try {
-			Product product = productService.getProduct(productId);
-			product.setMerchant(new Merchant());
+			Product product = productService.findByMerchantIdAndId(merchantId, productId);
 			
 			modelMapper.map(productInputDTO, product);
 			
-			product = productService.save(product);
+			product = productService.save(product, merchantId);
 					
 			return toDTO(product);
 		} catch (MerchantNotFoundException e) {
@@ -79,8 +77,10 @@ public class ProductController {
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{productId}")
-	public void delete(@PathVariable Long productId) {
-		productService.delete(productId);
+	public void delete(@PathVariable Long merchantId, @PathVariable Long productId) {
+		Product product = productService.findByMerchantIdAndId(merchantId, productId);
+		
+		productService.delete(product.getId());
 	}
 	
 	private List<ProductDTO> toCollectionlDTO(List<Product> products) {

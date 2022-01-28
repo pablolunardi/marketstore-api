@@ -2,6 +2,7 @@ create table merchant (
 	id bigint not null auto_increment,
 	name varchar(30) not null,
 	active tinyint(1) not null,
+	delivery_fee decimal(10,2) not null,
 	address_zipcode varchar(12) not null,
 	address_street_1 varchar(30) not null,
 	address_street_2 varchar(10),

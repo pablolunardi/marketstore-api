@@ -1,9 +1,6 @@
 package com.lunardi.marketstore.domain.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,24 +13,20 @@ import lombok.EqualsAndHashCode.Include;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Merchant {
+public class Customer {
 	
 	@Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false, length = 30)
-	private String name;
+	@Column(name = "full_name", nullable = false, length = 40)
+	private String fullName;
 	
-	@Column(nullable = false)
-	private Boolean active;
+	@Column(nullable = false, length = 40)
+	private String email;
 	
-	@Column(nullable = false)
-	private BigDecimal deliveryFee;
+	@Column(nullable = false, length = 12)
+	private String password;
 	
-	@Embedded
-	@Column(nullable = false)
-	private Address address;
-
 }

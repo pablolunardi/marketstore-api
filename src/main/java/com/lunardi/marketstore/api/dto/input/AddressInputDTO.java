@@ -33,6 +33,6 @@ public class AddressInputDTO {
 	
 	@Valid
 	@NotNull
-	private CityIdInputDTO city;
+	private IdInputDTO city;
 	
 }

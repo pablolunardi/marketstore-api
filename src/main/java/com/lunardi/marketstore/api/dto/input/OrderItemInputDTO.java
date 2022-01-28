@@ -1,6 +1,8 @@
 package com.lunardi.marketstore.api.dto.input;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MerchantIdInput {
+public class OrderItemInputDTO {
+
+	@NotNull
+	@Valid
+	private IdInputDTO product;
 	
 	@NotNull
-	Long id;
-
+	private Integer quantity;
+	
+	@Size(max = 200)
+	private String notes;
+	
 }

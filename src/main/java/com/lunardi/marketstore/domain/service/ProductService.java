@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,18 +24,25 @@ public class ProductService {
 	@Autowired
 	private MerchantService merchantService;
 	
-	public List<Product> findAll() {
-		return productRepository.findAll();
+	public Product findById(Long productId) {
+		return productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFoundException(productId));
+	}
+	
+	public List<Product> findByMerchant(Long merchantId) {
+		Merchant merchant = merchantService.getMerchant(merchantId);
+		
+		return productRepository.findAllByMerchant(merchant);
 	}
 
-	public Product getProduct(Long productId) {
-		return productRepository.findById(productId)
+	public Product findByMerchantIdAndId(Long merchantId, Long productId) {
+		return productRepository.findByMerchantIdAndId(merchantId, productId)
 				.orElseThrow(() -> new ProductNotFoundException(productId));
 	}
 
 	@Transactional
-	public Product save(Product product) {
-		Merchant merchant = merchantService.getMerchant(product.getMerchant().getId());
+	public Product save(Product product, Long merchantId) {
+		Merchant merchant = merchantService.getMerchant(merchantId);
 		
 		product.setMerchant(merchant);
 		
@@ -48,8 +54,6 @@ public class ProductService {
 		try {
 			productRepository.deleteById(productId);
 			productRepository.flush();
-		} catch (EmptyResultDataAccessException e) {
-			throw new ProductNotFoundException(productId);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(String.format(PRODUCT_IN_USE_MSG, productId));
 		}

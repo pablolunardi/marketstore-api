@@ -1,9 +1,10 @@
 package com.lunardi.marketstore.api.dto.input;
 
+import java.util.List;
+
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,14 +15,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CityInputDTO {
+public class OrderInputDTO {
 
-	@Size(min = 2, max = 30)
-	@NotBlank
-	private String name;
-	
-	@Valid
 	@NotNull
-	private IdInputDTO state;
+	@Valid
+	IdInputDTO merchant;
+	
+	@NotNull
+	@Valid
+	IdInputDTO paymentMethod;
+	
+	@NotNull
+	@Valid
+	IdInputDTO address;
+	
+	@NotEmpty
+	@Valid
+	private List<OrderItemInputDTO> items;
 	
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CityIdInputDTO {
+public class IdInputDTO {
 	
 	@NotNull
 	Long id;

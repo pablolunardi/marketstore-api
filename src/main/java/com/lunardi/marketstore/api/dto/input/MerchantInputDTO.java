@@ -1,5 +1,7 @@
 package com.lunardi.marketstore.api.dto.input;
 
+import java.math.BigDecimal;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,9 @@ public class MerchantInputDTO {
 	
 	@NotNull
 	private Boolean active;
+	
+	@NotNull
+	private BigDecimal deliveryFee;
 	
 	@NotNull
 	@Valid

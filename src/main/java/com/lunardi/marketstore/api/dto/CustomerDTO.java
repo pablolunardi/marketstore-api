@@ -1,6 +1,4 @@
-package com.lunardi.marketstore.api.dto.input;
-
-import javax.validation.constraints.NotNull;
+package com.lunardi.marketstore.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StateIdInput {
-	
-	@NotNull
-	Long id;
+public class CustomerDTO {
 
+	private Long id;
+	private String fullName;
+	
 }

@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MerchantDTO {
+public class OrderItemDTO {
 
-	private Long id;
-	private String name;
-	private Boolean active;
-	private BigDecimal deliveryFee;
-	private AddressDTO address;
+	private ProductDTO product;
+	private BigDecimal unitPrice;
+	private BigDecimal totalPrice;
+	private Integer quantity;
+	private String notes;
 	
 }
