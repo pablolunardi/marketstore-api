@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lunardi.marketstore.api.dto.OrderDTO;
 import com.lunardi.marketstore.api.dto.input.OrderInputDTO;
+import com.lunardi.marketstore.api.dto.view.OrderView;
+import com.lunardi.marketstore.domain.exception.AddressNotFoundException;
 import com.lunardi.marketstore.domain.exception.BusinessException;
 import com.lunardi.marketstore.domain.exception.MerchantNotFoundException;
 import com.lunardi.marketstore.domain.exception.PaymentMethodNotFoundException;
+import com.lunardi.marketstore.domain.exception.ProductNotFoundException;
 import com.lunardi.marketstore.domain.model.Order;
 import com.lunardi.marketstore.domain.service.OrderService;
 
@@ -34,18 +38,21 @@ public class OrderController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	@JsonView(OrderView.Summary.class)
 	@GetMapping
 	public List<OrderDTO> findAll() {
 		List<Order> orders = orderService.findAll();
 		
 		return toCollectionlDTO(orders);
 	}
-	
+
+	@JsonView(OrderView.class)
 	@GetMapping("/{orderId}")
-	public OrderDTO getCity(@PathVariable Long orderId) {
+	public OrderDTO getOrder(@PathVariable Long orderId) {
 		return toDTO(orderService.getOrder(orderId));
 	}
 	
+	@JsonView(OrderView.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public OrderDTO create(@Valid @RequestBody OrderInputDTO orderInputDTO) {
@@ -53,7 +60,7 @@ public class OrderController {
 			Order order = orderService.save(toModel(orderInputDTO), orderInputDTO.getAddress().getId());
 			
 			return toDTO(order);
-		} catch (PaymentMethodNotFoundException | MerchantNotFoundException e) {
+		} catch (PaymentMethodNotFoundException | MerchantNotFoundException | ProductNotFoundException | AddressNotFoundException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}

@@ -35,7 +35,10 @@ public class OrderService {
 	private ProductService productService;
 	
 	@Autowired
-	private CustomerAddressService customerAddressService;	
+	private CustomerAddressService customerAddressService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	public List<Order> findAll() {
 		return orderRepository.findAll();
@@ -48,8 +51,7 @@ public class OrderService {
 	
 	@Transactional
 	public Order save(Order order, Long addressId) {
-		Customer customer = new Customer();
-		customer.setId(1L);
+		Customer customer = customerService.findById(1L);
 		order.setCustomer(customer);
 		
 		validateOrder(order, addressId);
@@ -91,6 +93,7 @@ public class OrderService {
 			
 			orderItem.setOrder(order);
 			orderItem.setUnitPrice(product.getPrice());
+			orderItem.setProduct(product);
 		}
 		
 	}
