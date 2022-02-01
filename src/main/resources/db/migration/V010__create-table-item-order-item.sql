@@ -1,4 +1,4 @@
-create table customer_order (
+create table `order` (
 	id bigint not null auto_increment,
 	order_status varchar(30) not null,
 	order_sub_total decimal(10,2) not null,
@@ -28,14 +28,14 @@ create table customer_order (
 create table order_item (
 	id bigint not null auto_increment,
 	product_id bigint not null,
-	customer_order_id bigint not null,
+	order_id bigint not null,
 	unity_price decimal(10,2) not null,
 	total_price decimal(10,2) not null,
 	quantity smallint(6) not null,
 	notes varchar(200),
 	
 	constraint fk_order_item_product_id foreign key (product_id) references product (id),
-	constraint fk_item_customer_order_id foreign key (customer_order_id) references customer_order (id),
+	constraint fk_item_order_id foreign key (order_id) references `order` (id),
 	
 	primary key (id)
 ) engine=InnoDB default charset=utf8;

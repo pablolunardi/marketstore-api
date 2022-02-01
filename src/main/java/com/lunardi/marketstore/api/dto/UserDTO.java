@@ -5,18 +5,19 @@ import com.lunardi.marketstore.api.dto.view.MerchantOwnerView;
 import com.lunardi.marketstore.api.dto.view.MerchantView;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonView({MerchantView.class, MerchantOwnerView.class})
-public class StateDTO {
+@JsonView({MerchantOwnerView.class, MerchantView.class})
+public class UserDTO {
 
 	private Long id;
-	private String name;
-	
+	private String fullName;
+	private String email;
+
 }

@@ -32,4 +32,8 @@ public class MerchantInputDTO {
 	@Valid
 	private AddressInputDTO address;
 	
+	@NotNull
+	@Valid
+	private IdInputDTO merchantOwner;
+	
 }

@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode.Include;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "customer_order")
+@Table(name = "[order]")
 public class Order {
 	
 	@Include

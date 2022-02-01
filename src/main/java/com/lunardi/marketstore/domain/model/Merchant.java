@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,5 +37,9 @@ public class Merchant {
 	@Embedded
 	@Column(nullable = false)
 	private Address address;
+	
+	@ManyToOne
+	@JoinColumn(name =  "merchant_owner_id", nullable = false)
+	private MerchantOwner merchantOwner; 
 
 }

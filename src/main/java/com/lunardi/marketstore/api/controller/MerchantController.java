@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lunardi.marketstore.api.dto.MerchantDTO;
 import com.lunardi.marketstore.api.dto.input.MerchantInputDTO;
+import com.lunardi.marketstore.api.dto.view.MerchantView;
 import com.lunardi.marketstore.domain.exception.BusinessException;
 import com.lunardi.marketstore.domain.exception.CityNotFoundException;
 import com.lunardi.marketstore.domain.model.City;
@@ -37,6 +39,7 @@ public class MerchantController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	@JsonView({MerchantView.class})
 	@GetMapping
 	public List<MerchantDTO> findAll() {
 		List<Merchant> merchants = merchantService.findAll();
@@ -44,11 +47,13 @@ public class MerchantController {
 		return toCollectionlDTO(merchants);
 	}
 	
+	@JsonView({MerchantView.class})
 	@GetMapping("/{merchantId}")
 	public MerchantDTO getMerchant(@PathVariable Long merchantId) {
 		return toDTO(merchantService.getMerchant(merchantId));
 	}
 	
+	@JsonView({MerchantView.class})
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public MerchantDTO create(@Valid @RequestBody MerchantInputDTO merchantInputDTO) {
@@ -61,6 +66,7 @@ public class MerchantController {
 		}
 	}
 	
+	@JsonView({MerchantView.class})
 	@PutMapping("/{merchantId}")
 	public MerchantDTO update(@PathVariable Long merchantId, @Valid @RequestBody MerchantInputDTO merchantInputDTO) {
 		try {

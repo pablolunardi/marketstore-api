@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lunardi.marketstore.domain.exception.AddressNotFoundException;
+import com.lunardi.marketstore.domain.model.City;
 import com.lunardi.marketstore.domain.model.Customer;
 import com.lunardi.marketstore.domain.model.CustomerAddress;
 import com.lunardi.marketstore.domain.repository.CustomerAddressRepository;
@@ -20,6 +21,9 @@ public class CustomerAddressService {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CityService cityService;
 	
 
 	public CustomerAddress findById(Long addressId, Long customerId) {
@@ -39,8 +43,10 @@ public class CustomerAddressService {
 	@Transactional
 	public CustomerAddress save(Long costumerId, CustomerAddress customerAddress) {
 		Customer customer = customerService.getCustomer(costumerId);
+		City city = cityService.getCity(customerAddress.getCity().getId());
 		
 		customerAddress.setCustomer(customer);
+		customerAddress.setCity(city);
 		
 		return customerAddressRepository.save(customerAddress);
 	}
