@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +44,10 @@ public class MerchantController {
 	
 	@JsonView({MerchantView.class})
 	@GetMapping
-	public List<MerchantDTO> findAll() {
-		List<Merchant> merchants = merchantService.findAll();
+	public Page<MerchantDTO> findAll(Pageable pageable) {
+		Page<Merchant> merchants = merchantService.findAll(pageable);
 		
-		return toCollectionlDTO(merchants);
+		return toDTOPage(merchants, pageable);
 	}
 	
 	@JsonView({MerchantView.class})
@@ -89,9 +92,11 @@ public class MerchantController {
 		merchantService.delete(merchantId);
 	}
 	
-	private List<MerchantDTO> toCollectionlDTO(List<Merchant> merchants) {
-		return merchants.stream().map(this::toDTO)
+	private Page<MerchantDTO> toDTOPage(Page<Merchant> merchants, Pageable pageable) {
+		List<MerchantDTO> merchantsDTO = merchants.getContent().stream().map(this::toDTO)
 				.collect(Collectors.toList());
+		
+		return new PageImpl<>(merchantsDTO, pageable, merchantsDTO.size());
 	}
 	
 	private MerchantDTO toDTO(Merchant merchant) {

@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +37,10 @@ public class CustomerController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
-	public List<CustomerDTO> findAll() {
-		List<Customer> customers = customerService.findAll();
+	public Page<CustomerDTO> findAll(Pageable pageable) {
+		Page<Customer> customers = customerService.findAll(pageable);
 		
-		return toCollectionlDTO(customers);
+		return toDTOPage(customers, pageable);
 	}
 	
 	@GetMapping("/{customerId}")
@@ -64,9 +67,11 @@ public class CustomerController {
 		return toDTO(customer);
 	}
 	
-	private List<CustomerDTO> toCollectionlDTO(List<Customer> customer) {
-		return customer.stream().map(this::toDTO)
-				.collect(Collectors.toList());
+	private Page<CustomerDTO> toDTOPage(Page<Customer> customer, Pageable pageable) {
+		List<CustomerDTO> customers = customer.getContent().stream()
+				.map(this::toDTO).collect(Collectors.toList());
+		
+		return new PageImpl<>(customers, pageable, customer.getSize());
 	}
 	
 	private CustomerDTO toDTO(Customer customer) {

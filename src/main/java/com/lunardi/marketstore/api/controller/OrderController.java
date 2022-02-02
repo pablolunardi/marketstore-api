@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,12 +41,12 @@ public class OrderController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@JsonView(OrderView.Summary.class)
+	@JsonView({OrderView.Summary.class})
 	@GetMapping
-	public List<OrderDTO> findAll() {
-		List<Order> orders = orderService.findAll();
+	public Page<OrderDTO> findAll(Pageable pageable) {
+		Page<Order> orders = orderService.findAll(pageable);
 		
-		return toCollectionlDTO(orders);
+		return toDTOPage(orders, pageable);
 	}
 
 	@JsonView(OrderView.class)
@@ -66,9 +69,11 @@ public class OrderController {
 	}
 	
 	
-	private List<OrderDTO> toCollectionlDTO(List<Order> orders) {
-		return orders.stream().map(this::toDTO)
+	private Page<OrderDTO> toDTOPage(Page<Order> orders, Pageable pageable) {
+		List<OrderDTO> ordersDTO = orders.getContent().stream().map(this::toDTO)
 				.collect(Collectors.toList());
+		
+		return new PageImpl<>(ordersDTO, pageable, ordersDTO.size());
 	}
 	
 	private OrderDTO toDTO(Order order) {

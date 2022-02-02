@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lunardi.marketstore.api.dto.ProductDTO;
 import com.lunardi.marketstore.api.dto.input.ProductInputDTO;
+import com.lunardi.marketstore.api.dto.view.ProductView;
 import com.lunardi.marketstore.domain.exception.BusinessException;
 import com.lunardi.marketstore.domain.exception.MerchantNotFoundException;
 import com.lunardi.marketstore.domain.model.Product;
@@ -36,11 +41,12 @@ public class MerchantProductController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	@JsonView({ProductView.class})
 	@GetMapping
-	public List<ProductDTO> findAll(@PathVariable Long merchantId) {
-		List<Product> products = productService.findByMerchant(merchantId);
+	public Page<ProductDTO> findAll(@PathVariable Long merchantId, Pageable pageable) {
+		Page<Product> products = productService.findByMerchant(merchantId, pageable);
 		
-		return toCollectionlDTO(products);
+		return toDTOPage(products, pageable);
 	}
 	
 	@GetMapping("/{productId}")
@@ -83,9 +89,11 @@ public class MerchantProductController {
 		productService.delete(product.getId());
 	}
 	
-	private List<ProductDTO> toCollectionlDTO(List<Product> products) {
-		return products.stream().map(this::toDTO)
+	private Page<ProductDTO> toDTOPage(Page<Product> products, Pageable pageable) {
+		List<ProductDTO> productsDTO = products.getContent().stream().map(this::toDTO)
 				.collect(Collectors.toList());
+		
+		return new PageImpl<>(productsDTO, pageable, productsDTO.size());
 	}
 	
 	private ProductDTO toDTO(Product product) {

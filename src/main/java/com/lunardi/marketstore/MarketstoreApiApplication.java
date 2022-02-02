@@ -13,5 +13,5 @@ public class MarketstoreApiApplication {
 		
 		SpringApplication.run(MarketstoreApiApplication.class, args);
 	}
-
+	
 }

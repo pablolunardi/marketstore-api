@@ -1,10 +1,10 @@
 package com.lunardi.marketstore.domain.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +25,8 @@ public class MerchantService {
 	@Autowired
 	private CityService cityService;
 	
-	public List<Merchant> findAll() {
-		return merchantRepository.findAll();
+	public Page<Merchant> findAll(Pageable pageable) {
+		return merchantRepository.findAll(pageable);
 	}
 
 	public Merchant getMerchant(Long merchantId) {

@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,10 +40,10 @@ public class MerchantOwnerController {
 	
 	@JsonView(MerchantOwnerView.class)
 	@GetMapping
-	public List<MerchantOwnerDTO> findAll() {
-		List<MerchantOwner> merchantOwners = merchantOwnerService.findAll();
+	public Page<MerchantOwnerDTO> findAll(Pageable pageable) {
+		Page<MerchantOwner> merchantOwners = merchantOwnerService.findAll(pageable);
 		
-		return toCollectionlDTO(merchantOwners);
+		return toDTOPage(merchantOwners, pageable);
 	}
 	
 	@JsonView(MerchantOwnerView.class)
@@ -70,9 +73,11 @@ public class MerchantOwnerController {
 		return toDTO(merchantOwner);
 	}
 	
-	private List<MerchantOwnerDTO> toCollectionlDTO(List<MerchantOwner> merchantOwners) {
-		return merchantOwners.stream().map(this::toDTO)
+	private Page<MerchantOwnerDTO> toDTOPage(Page<MerchantOwner> merchantOwners, Pageable pageable) {
+		List<MerchantOwnerDTO> merchantOwnersDTO = merchantOwners.getContent().stream().map(this::toDTO)
 				.collect(Collectors.toList());
+		
+		return new PageImpl<>(merchantOwnersDTO, pageable, merchantOwnersDTO.size());
 	}
 	
 	private MerchantOwnerDTO toDTO(MerchantOwner merchantOwner) {

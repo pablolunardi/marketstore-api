@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonView({ProductView.class})
 public class ProductDTO {
 
 	@JsonView({ProductView.class, OrderView.class})
@@ -27,9 +26,10 @@ public class ProductDTO {
 	@JsonView({ProductView.class, OrderView.class})
 	private String description;
 	
+	@JsonView({ProductView.class})
 	private BigDecimal price;
-	private Boolean enabled;
 	
-	private MerchantDTO merchant;
+	@JsonView({ProductView.class})
+	private Boolean enabled;
 	
 }

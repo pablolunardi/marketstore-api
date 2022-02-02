@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonView({MerchantOwnerView.class})
 public class MerchantOwnerDTO extends UserDTO {
 	
+	@JsonView({MerchantOwnerView.class})
 	private List<MerchantDTO> merchants;
 
 }

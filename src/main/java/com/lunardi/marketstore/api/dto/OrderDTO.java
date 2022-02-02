@@ -5,8 +5,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.lunardi.marketstore.api.dto.view.OrderView;
 import com.lunardi.marketstore.domain.model.OrderStatus;
 
