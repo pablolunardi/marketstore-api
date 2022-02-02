@@ -2,7 +2,7 @@ package com.lunardi.marketstore.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -78,7 +78,7 @@ public class Order {
 	private Customer customer;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<OrderItem> items;
+	private Set<OrderItem> items;
 	
 	public void calculateOrderTotal() {
 		this.getItems().forEach(OrderItem::calculateOrderItemTotal);
