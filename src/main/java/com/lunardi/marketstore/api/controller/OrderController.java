@@ -29,14 +29,14 @@ import com.lunardi.marketstore.domain.exception.MerchantNotFoundException;
 import com.lunardi.marketstore.domain.exception.PaymentMethodNotFoundException;
 import com.lunardi.marketstore.domain.exception.ProductNotFoundException;
 import com.lunardi.marketstore.domain.model.Order;
-import com.lunardi.marketstore.domain.service.OrderService;
+import com.lunardi.marketstore.domain.service.OrderEmitterService;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 	
 	@Autowired
-	private OrderService orderService;
+	private OrderEmitterService orderEmitterService;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -44,7 +44,7 @@ public class OrderController {
 	@JsonView({OrderView.Summary.class})
 	@GetMapping
 	public Page<OrderDTO> findAll(Pageable pageable) {
-		Page<Order> orders = orderService.findAll(pageable);
+		Page<Order> orders = orderEmitterService.findAll(pageable);
 		
 		return toDTOPage(orders, pageable);
 	}
@@ -52,7 +52,7 @@ public class OrderController {
 	@JsonView(OrderView.class)
 	@GetMapping("/{orderId}")
 	public OrderDTO getOrder(@PathVariable Long orderId) {
-		return toDTO(orderService.getOrder(orderId));
+		return toDTO(orderEmitterService.getOrder(orderId));
 	}
 	
 	@JsonView(OrderView.class)
@@ -60,7 +60,7 @@ public class OrderController {
 	@PostMapping
 	public OrderDTO create(@Valid @RequestBody OrderInputDTO orderInputDTO) {
 		try {
-			Order order = orderService.save(toModel(orderInputDTO), orderInputDTO.getAddress().getId());
+			Order order = orderEmitterService.save(toModel(orderInputDTO), orderInputDTO.getAddress().getId());
 			
 			return toDTO(order);
 		} catch (PaymentMethodNotFoundException | MerchantNotFoundException | ProductNotFoundException | AddressNotFoundException e) {

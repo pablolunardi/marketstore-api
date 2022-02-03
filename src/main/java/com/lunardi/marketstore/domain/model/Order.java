@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.lunardi.marketstore.domain.exception.BusinessException;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
@@ -88,6 +90,20 @@ public class Order {
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 		
 		this.setOrderTotal(this.getOrderSubTotal().add(deliveryFee));
+	}
+
+	public void confirm() {
+		setStatus(OrderStatus.CONFIRMED);
+		this.setConfirmedDate(OffsetDateTime.now());
+	}
+	
+	private void setStatus(OrderStatus newStatus) {
+		if (!this.getOrderStatus().canChangeToStatus(newStatus)) {
+			throw new BusinessException(String.format("Can't change status of order %s from %s to %s", this.getId(),
+					this.getOrderStatus(), newStatus));
+		}
+		
+		this.setOrderStatus(newStatus);
 	}
 	
 }

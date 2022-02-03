@@ -21,7 +21,7 @@ import com.lunardi.marketstore.domain.model.Product;
 import com.lunardi.marketstore.domain.repository.OrderRepository;
 
 @Service
-public class OrderService {
+public class OrderEmitterService {
 
 	@Autowired
 	private OrderRepository orderRepository;
