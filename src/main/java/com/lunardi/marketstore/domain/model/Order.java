@@ -97,6 +97,21 @@ public class Order {
 		this.setConfirmedDate(OffsetDateTime.now());
 	}
 	
+	public void cancel() {
+		setStatus(OrderStatus.CANCELLED);
+		this.setCancelledDate(OffsetDateTime.now());
+	}
+
+	public void deliver() {
+		setStatus(OrderStatus.ON_DELIVERY_ROUTE);
+		this.setOnDeliveryRouteDate(onDeliveryRouteDate);
+	}
+
+	public void complete() {
+		setStatus(OrderStatus.DELIVERED);
+		this.setDeliveredDate(deliveredDate);
+	}
+	
 	private void setStatus(OrderStatus newStatus) {
 		if (!this.getOrderStatus().canChangeToStatus(newStatus)) {
 			throw new BusinessException(String.format("Can't change status of order %s from %s to %s", this.getId(),
@@ -105,5 +120,5 @@ public class Order {
 		
 		this.setOrderStatus(newStatus);
 	}
-	
+
 }

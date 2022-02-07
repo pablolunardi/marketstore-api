@@ -18,9 +18,27 @@ public class OrderFlowController {
 	private OrderFlowService orderFlowService;
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PutMapping("confirm")
-	public void getOrder(@PathVariable Long orderId) {
+	@PutMapping("/confirm")
+	public void confirm(@PathVariable Long orderId) {
 		orderFlowService.confirm(orderId);
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PutMapping("/cancel")
+	public void cancel(@PathVariable Long orderId) {
+		orderFlowService.cancel(orderId);
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PutMapping("/deliver")
+	public void deliver(@PathVariable Long orderId) {
+		orderFlowService.deliver(orderId);
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PutMapping("/complete")
+	public void complete(@PathVariable Long orderId) {
+		orderFlowService.complete(orderId);
 	}
 	
 }

@@ -25,6 +25,33 @@ public class OrderFlowService {
 		
 		orderRepository.save(order);
 	}
+	
+	@Transactional
+	public void cancel(Long orderId) {
+		Order order = orderEmitterService.getOrder(orderId);
+		
+		order.cancel();
+		
+		orderRepository.save(order);
+	}
+	
+	@Transactional
+	public void deliver(Long orderId) {
+		Order order = orderEmitterService.getOrder(orderId);
+		
+		order.deliver();
+		
+		orderRepository.save(order);
+	}
+	
+	@Transactional
+	public void complete(Long orderId) {
+		Order order = orderEmitterService.getOrder(orderId);
+		
+		order.complete();
+		
+		orderRepository.save(order);
+	}
 
 	
 }
